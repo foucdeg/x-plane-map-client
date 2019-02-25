@@ -16,6 +16,7 @@ require('leaflet.gridlayer.googlemutant');
 
 const navTiles = 'https://{s}.gis.flightplandatabase.com/tile/nav/{z}/{x}/{y}.png';
 const osmTiles = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+const otmTiles = 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png';
 const navLayerAttribution = '<a href="https://flightplandatabase.com" target="_blank">Flight Plan Database</a>';
 
 class Map extends Component {
@@ -80,6 +81,9 @@ class Map extends Component {
         <LayersControl position="bottomleft">
           <LayersControl.BaseLayer name="OpenStreetMap" checked>
             <TileLayer url={osmTiles} attribution="© OpenStreetMap contributors" />
+          </LayersControl.BaseLayer>
+          <LayersControl.BaseLayer name="OpenTopoMap" checked>
+            <TileLayer url={otmTiles} attribution="© OpenStreetMap contributors, SRTM | © OpenTopoMap" />
           </LayersControl.BaseLayer>
           <LayersControl.BaseLayer name="Google Maps - Roads">
             <GoogleMapLayer />
