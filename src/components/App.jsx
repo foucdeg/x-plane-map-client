@@ -7,10 +7,12 @@ import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import MenuIcon from '@material-ui/icons/Menu';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import LayersIcon from '@material-ui/icons/Layers';
 import PlanesMap from '../containers/PlanesMap';
 import PlanesPanel from '../containers/PlanesPanel';
 import PlaneReplayControls from '../containers/PlaneReplayControls';
 import MobileOverlay from './MobileOverlay';
+import KmlLoaderOverlay from './KmlLoaderOverlay';
 import '../stylesheets/map.less';
 
 export default class App extends Component {
@@ -20,6 +22,7 @@ export default class App extends Component {
     this.state = {
       isPanelOpen: false,
       isMobileOverlayVisible: false,
+      isKmlOverlayVisible: false,
     };
   }
 
@@ -65,15 +68,24 @@ export default class App extends Component {
               <Tooltip title="Open map elsewhere">
                 <Button
                   size="small"
-                  variant="raised"
+                  variant="contained"
                   onClick={() => this.setState({ isMobileOverlayVisible: true })}
                 >
                   <OpenInNewIcon />
                 </Button>
               </Tooltip>
             )}
+            <Tooltip title="Configure map layers">
+              <Button
+                size="small"
+                variant="contained"
+                onClick={() => this.setState({ isKmlOverlayVisible: true })}
+              >
+                <LayersIcon />
+              </Button>
+            </Tooltip>
             <Tooltip title={this.state.isPanelOpen ? 'Hide panel' : 'Show panel'}>
-              <Button size="small" variant="raised" color="primary" onClick={this.togglePanel}>
+              <Button size="small" variant="contained" color="primary" onClick={this.togglePanel}>
                 <MenuIcon />
               </Button>
             </Tooltip>
@@ -85,6 +97,10 @@ export default class App extends Component {
         <MobileOverlay
           visible={this.state.isMobileOverlayVisible}
           onClose={() => this.setState({ isMobileOverlayVisible: false })}
+        />
+        <KmlLoaderOverlay
+          visible={this.state.isKmlOverlayVisible}
+          onClose={() => this.setState({ isKmlOverlayVisible: false })}
         />
       </React.Fragment>
     );

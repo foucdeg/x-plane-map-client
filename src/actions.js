@@ -16,6 +16,8 @@ export const CHANGE_ICON = 'CHANGE_ICON';
 export const REQUEST_PLANES = 'REQUEST_PLANES';
 export const RECEIVE_PLANES = 'RECEIVE_PLANES';
 export const REJECT_PLANES = 'REJECT_PLANES';
+export const ADD_LAYER = 'ADD_LAYER';
+export const REMOVE_LAYER = 'REMOVE_LAYER';
 
 const endpoint = PLATFORM === 'electron' ? decodeConfig().mapServerURL : '';
 
@@ -101,4 +103,12 @@ export function fetchPlanes() {
       .then(data => dispatch(receivePlanes(data)))
       .catch(error => dispatch(rejectPlanes(error)));
   };
+}
+
+export function addLayer(name, geoJson) {
+  return { type: ADD_LAYER, payload: { name, geoJson } };
+}
+
+export function removeLayer(idToRemove) {
+  return { type: REMOVE_LAYER, payload: { idToRemove } };
 }

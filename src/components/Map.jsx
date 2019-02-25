@@ -1,7 +1,7 @@
 /* eslint no-underscore-dangle: ["error", { "allow": ["_zoom"] }] */
 
 import React, { Component } from 'react';
-import { Map as LeafletMap, LayersControl, TileLayer } from 'react-leaflet';
+import { Map as LeafletMap, LayersControl, TileLayer, GeoJSON } from 'react-leaflet';
 import PropTypes from 'prop-types';
 
 import { POLYLINE_OPTIONS, BUILT_ICONS, REFRESH_FRAME_RATE } from '../constants';
@@ -94,6 +94,11 @@ class Map extends Component {
           <LayersControl.Overlay name="Airports, localizers and waypoints">
             <TileLayer url={navTiles} attribution={navLayerAttribution} />
           </LayersControl.Overlay>
+          {this.props.layers.map(layer => (
+            <LayersControl.Overlay name={layer.name} key={layer.id}>
+              <GeoJSON data={layer.geoJson} />
+            </LayersControl.Overlay>
+          ))}
         </LayersControl>
         { !this.props.replayingPlane && this.props.planes.map(plane => (
           <React.Fragment key={plane.ip}>

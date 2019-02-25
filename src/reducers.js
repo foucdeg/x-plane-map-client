@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import * as actions from './actions';
-import { mergePlaneData, togglePlaneTrace, clearPlaneTrace, renamePlane, changePlaneIcon } from './helpers';
+import { mergePlaneData, togglePlaneTrace, clearPlaneTrace, renamePlane, changePlaneIcon, hashObject } from './helpers';
 import { refreshReplay, resetPlaneToInitialPosition } from './replay-helpers';
 
 const followedPlane = (state = null, action) => {
@@ -51,8 +51,20 @@ const replayingPlane = (state = null, action) => {
   }
 };
 
+const layers = (state = [], action) => {
+  switch (action.type) {
+    case actions.ADD_LAYER:
+      return [...state, { ...action.payload, id: hashObject(action.payload) }];
+    case actions.REMOVE_LAYER:
+      return state.filter(layer => layer.id !== action.payload.idToRemove);
+    default:
+      return state;
+  }
+};
+
 export default combineReducers({
   planes,
   followedPlane,
   replayingPlane,
+  layers,
 });

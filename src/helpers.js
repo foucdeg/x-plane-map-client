@@ -187,3 +187,16 @@ export function decodeConfig() {
 
   return config;
 }
+
+/* eslint-disable no-bitwise */
+export function hashObject(object) {
+  let hash = 0;
+  const strObject = JSON.stringify(object);
+  for (let i = 0; i < strObject.length; i++) {
+    const character = strObject.charCodeAt(i);
+    hash = ((hash << 5) - hash) + character;
+    hash &= hash; // Convert to 32bit integer
+  }
+  return hash;
+}
+/* eslint-enable no-bitwise */

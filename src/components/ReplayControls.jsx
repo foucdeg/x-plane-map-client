@@ -8,7 +8,7 @@ import FastForwardIcon from '@material-ui/icons/FastForward';
 import CloseIcon from '@material-ui/icons/Close';
 
 const ReplayButton = ({ disabled, onClick, children }) => (
-  <Button size="small" variant="raised" color="secondary" onClick={onClick} disabled={disabled}>
+  <Button size="small" variant="contained" color="secondary" onClick={onClick} disabled={disabled}>
     {children}
   </Button>
 );

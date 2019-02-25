@@ -73,13 +73,15 @@ class MobileOverlay extends Component {
           </div>
           <CopyToClipboard text={this.qrCodeUrl} onCopy={this.handleCopy}>
             {this.state.wasCopied ? (
-              <Button size="small" variant="raised" disabled color="primary">
-                <DoneIcon />&nbsp;
+              <Button size="small" variant="contained" disabled color="primary">
+                <DoneIcon />
+                &nbsp;
                 Link copied
               </Button>
             ) : (
-              <Button size="small" variant="raised" color="primary">
-                <LinkIcon />&nbsp;
+              <Button size="small" variant="contained" color="primary">
+                <LinkIcon />
+                &nbsp;
                 Click to copy the link
               </Button>
             )}

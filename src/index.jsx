@@ -4,6 +4,8 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { createStore, compose, applyMiddleware } from 'redux';
+import persistState from 'redux-localstorage';
+
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 
@@ -14,7 +16,7 @@ const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(
   xPlaneMapApp,
-  composeEnhancer(applyMiddleware(thunk)),
+  composeEnhancer(applyMiddleware(thunk), persistState('layers')),
 );
 
 render(
