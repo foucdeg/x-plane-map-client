@@ -82,7 +82,7 @@ class Map extends Component {
           <LayersControl.BaseLayer name="OpenStreetMap" checked>
             <TileLayer url={osmTiles} attribution="© OpenStreetMap contributors" />
           </LayersControl.BaseLayer>
-          <LayersControl.BaseLayer name="OpenTopoMap" checked>
+          <LayersControl.BaseLayer name="OpenTopoMap">
             <TileLayer url={otmTiles} attribution="© OpenStreetMap contributors, SRTM | © OpenTopoMap" />
           </LayersControl.BaseLayer>
           <LayersControl.BaseLayer name="Google Maps - Roads">
