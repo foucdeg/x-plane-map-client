@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { Map as LeafletMap, LayersControl, TileLayer, GeoJSON } from 'react-leaflet';
 import PropTypes from 'prop-types';
 
-import { POLYLINE_OPTIONS, BUILT_ICONS, REFRESH_FRAME_RATE } from '../constants';
+import { POLYLINE_OPTIONS, BUILT_ICONS, REFRESH_FRAME_RATE, PERIOD } from '../constants';
 import Trace from './Trace';
 import RotatingMarker from './RotatingMarker';
 import GoogleMapLayer from './GoogleMapLayer';
@@ -28,6 +28,12 @@ class Map extends Component {
     };
 
     this.replayRefreshInterval = null;
+  }
+
+  componentDidMount() {
+    this.planeFetchInterval = setInterval(() => {
+      this.props.fetchPlanes();
+    }, PERIOD);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -61,6 +67,7 @@ class Map extends Component {
   }
 
   componentWillUnmount() {
+    clearInterval(this.planeFetchInterval);
     clearInterval(this.replayRefreshInterval);
   }
 
@@ -165,6 +172,7 @@ Map.propTypes = {
   onPlaneLeave: PropTypes.func.isRequired,
   onReplayEnded: PropTypes.func.isRequired,
   refreshReplay: PropTypes.func.isRequired,
+  fetchPlanes: PropTypes.func.isRequired,
   replayingPlane: planeType,
 };
 

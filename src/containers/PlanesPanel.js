@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { setActivePlane, renamePlane, toggleTrace, clearTrace, enterReplayMode, changeIcon, fetchPlanes } from '../actions';
+import { setActivePlane, renamePlane, toggleTrace, clearTrace, enterReplayMode, changeIcon } from '../actions';
 import Panel from '../components/Panel';
 
 const mapStateToProps = state => state;
@@ -11,7 +11,6 @@ const mapDispatchToProps = dispatch => ({
   onPlaneTraceClear: plane => dispatch(clearTrace(plane)),
   onPlaneReplayMode: plane => dispatch(enterReplayMode(plane)),
   onPlaneIconChange: plane => dispatch(changeIcon(plane)),
-  fetchPlanes: () => dispatch(fetchPlanes()),
 });
 
 const PlanesPanel = connect(

@@ -13,7 +13,11 @@ import PlanesPanel from '../containers/PlanesPanel';
 import PlaneReplayControls from '../containers/PlaneReplayControls';
 import MobileOverlay from './MobileOverlay';
 import KmlLoaderOverlay from './KmlLoaderOverlay';
+import { decodeConfig } from '../helpers';
+
 import '../stylesheets/map.less';
+
+const { staticMode = false } = decodeConfig();
 
 export default class App extends Component {
   constructor() {
@@ -47,7 +51,7 @@ export default class App extends Component {
   }
 
   handleKeys = (e) => {
-    if (e.key === 'Tab') {
+    if (e.key === 'Tab' && !staticMode) {
       e.preventDefault();
       this.togglePanel();
     }
@@ -63,8 +67,9 @@ export default class App extends Component {
             mapElement={<div style={{ height: '100%' }} />}
           />
           <PlaneReplayControls />
-          <div className="buttons">
-            {PLATFORM === 'electron' && (
+          {!staticMode && (
+            <div className="buttons">
+              {PLATFORM === 'electron' && (
               <Tooltip title="Open map elsewhere">
                 <Button
                   size="small"
@@ -74,34 +79,41 @@ export default class App extends Component {
                   <OpenInNewIcon />
                 </Button>
               </Tooltip>
-            )}
-            <Tooltip title="Configure map layers">
-              <Button
-                size="small"
-                variant="contained"
-                onClick={() => this.setState({ isKmlOverlayVisible: true })}
-              >
-                <LayersIcon />
-              </Button>
-            </Tooltip>
-            <Tooltip title={this.state.isPanelOpen ? 'Hide panel' : 'Show panel'}>
-              <Button size="small" variant="contained" color="primary" onClick={this.togglePanel}>
-                <MenuIcon />
-              </Button>
-            </Tooltip>
-          </div>
+              )}
+              <Tooltip title="Configure map layers">
+                <Button
+                  size="small"
+                  variant="contained"
+                  onClick={() => this.setState({ isKmlOverlayVisible: true })}
+                >
+                  <LayersIcon />
+                </Button>
+              </Tooltip>
+              <Tooltip title={this.state.isPanelOpen ? 'Hide panel' : 'Show panel'}>
+                <Button size="small" variant="contained" color="primary" onClick={this.togglePanel}>
+                  <MenuIcon />
+                </Button>
+              </Tooltip>
+            </div>
+          )}
         </div>
-        <Drawer variant="persistent" anchor="right" open={this.state.isPanelOpen}>
-          <PlanesPanel />
-        </Drawer>
-        <MobileOverlay
-          visible={this.state.isMobileOverlayVisible}
-          onClose={() => this.setState({ isMobileOverlayVisible: false })}
-        />
-        <KmlLoaderOverlay
-          visible={this.state.isKmlOverlayVisible}
-          onClose={() => this.setState({ isKmlOverlayVisible: false })}
-        />
+        {!staticMode && (
+          <Drawer variant="persistent" anchor="right" open={this.state.isPanelOpen}>
+            <PlanesPanel />
+          </Drawer>
+        )}
+        {!staticMode && (
+          <MobileOverlay
+            visible={this.state.isMobileOverlayVisible}
+            onClose={() => this.setState({ isMobileOverlayVisible: false })}
+          />
+        )}
+        {!staticMode && (
+          <KmlLoaderOverlay
+            visible={this.state.isKmlOverlayVisible}
+            onClose={() => this.setState({ isKmlOverlayVisible: false })}
+          />
+        )}
       </React.Fragment>
     );
   }
