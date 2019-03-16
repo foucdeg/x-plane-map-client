@@ -8,7 +8,7 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import PlaneRow from './PlaneRow';
 
 const Panel = ({
-  planes, followedPlane, onPlaneIconChange, onPlaneReplayMode, onPlaneTraceClear,
+  planes, followedPlane, onPlaneIconChange, onPlaneTraceClear,
   onPlaneTraceToggle, onPlaneRename, onPlaneSelect,
 }) => (
   <div id="panel">
@@ -22,7 +22,6 @@ const Panel = ({
           onPlaneTraceToggle={onPlaneTraceToggle.bind(this, plane)}
           onPlaneTraceClear={onPlaneTraceClear.bind(this, plane)}
           onPlaneIconChange={onPlaneIconChange.bind(this, plane)}
-          onPlaneReplayMode={onPlaneReplayMode.bind(this, plane)}
           onPlaneRename={onPlaneRename.bind(this, plane)}
         />
       ))}
@@ -43,7 +42,6 @@ Panel.propTypes = {
   onPlaneTraceClear: PropTypes.func.isRequired,
   onPlaneTraceToggle: PropTypes.func.isRequired,
   onPlaneIconChange: PropTypes.func.isRequired,
-  onPlaneReplayMode: PropTypes.func.isRequired,
   onPlaneRename: PropTypes.func.isRequired,
 };
 

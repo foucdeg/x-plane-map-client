@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { Map as LeafletMap, LayersControl, TileLayer, GeoJSON } from 'react-leaflet';
 import PropTypes from 'prop-types';
 
-import { POLYLINE_OPTIONS, BUILT_ICONS, REFRESH_FRAME_RATE, PERIOD } from '../constants';
+import { POLYLINE_OPTIONS, BUILT_ICONS, PERIOD } from '../constants';
 import Trace from './Trace';
 import RotatingMarker from './RotatingMarker';
 import GoogleMapLayer from './GoogleMapLayer';
@@ -26,8 +26,6 @@ class Map extends Component {
       currentPosition: [0, 0],
       zoom: 8,
     };
-
-    this.replayRefreshInterval = null;
   }
 
   componentDidMount() {
@@ -37,17 +35,7 @@ class Map extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.replayingPlane && !this.props.replayingPlane) {
-      this.replayRefreshInterval = setInterval(
-        this.props.refreshReplay.bind(this),
-        REFRESH_FRAME_RATE,
-      );
-    }
-    if (!nextProps.replayingPlane && this.props.replayingPlane) {
-      clearInterval(this.replayRefreshInterval);
-    }
-
-    if (!nextProps.followedPlane || nextProps.replayingPlane) return;
+    if (!nextProps.followedPlane) return;
     const plane = nextProps.planes.find(aPlane => aPlane.ip === nextProps.followedPlane);
     if (!plane) return;
     this.setState({
@@ -55,20 +43,8 @@ class Map extends Component {
     });
   }
 
-  shouldComponentUpdate(nextProps) {
-    if (!nextProps.replayingPlane) return true;
-    if (!this.props.replayingPlane) return true;
-
-    if (nextProps.replayingPlane.currentTimestamp !== this.props.replayingPlane.currentTimestamp) {
-      return true;
-    }
-
-    return false;
-  }
-
   componentWillUnmount() {
     clearInterval(this.planeFetchInterval);
-    clearInterval(this.replayRefreshInterval);
   }
 
   handleZoom = (e) => {
@@ -111,7 +87,7 @@ class Map extends Component {
             </LayersControl.Overlay>
           ))}
         </LayersControl>
-        { !this.props.replayingPlane && this.props.planes.map(plane => (
+        {this.props.planes.map(plane => (
           <React.Fragment key={plane.ip}>
             <RotatingMarker
               position={plane.position}
@@ -129,22 +105,6 @@ class Map extends Component {
             )}
           </React.Fragment>
         ))}
-        { this.props.replayingPlane && (
-          <React.Fragment>
-            <RotatingMarker
-              position={this.props.replayingPlane.position}
-              icon={BUILT_ICONS[this.props.replayingPlane.icon]}
-              rotationAngle={this.props.replayingPlane.heading}
-              rotationOrigin="initial"
-            >
-              <PlanePopup plane={this.props.replayingPlane} />
-            </RotatingMarker>
-            <Trace
-              {...POLYLINE_OPTIONS}
-              positions={this.props.replayingPlane.visiblePath}
-            />
-          </React.Fragment>
-        )}
       </LeafletMap>
     );
   }
@@ -164,22 +124,12 @@ Map.propTypes = {
     PropTypes.bool,
   ]),
   planes: PropTypes.arrayOf(planeType).isRequired,
-  replayControls: PropTypes.shape({
-    minTimestamp: PropTypes.number,
-    maxTimestamp: PropTypes.number,
-    speed: PropTypes.number,
-  }),
   onPlaneLeave: PropTypes.func.isRequired,
-  onReplayEnded: PropTypes.func.isRequired,
-  refreshReplay: PropTypes.func.isRequired,
   fetchPlanes: PropTypes.func.isRequired,
-  replayingPlane: planeType,
 };
 
 Map.defaultProps = {
   followedPlane: null,
-  replayingPlane: null,
-  replayControls: null,
 };
 
 export default Map;

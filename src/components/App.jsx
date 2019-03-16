@@ -10,7 +10,6 @@ import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import LayersIcon from '@material-ui/icons/Layers';
 import PlanesMap from '../containers/PlanesMap';
 import PlanesPanel from '../containers/PlanesPanel';
-import PlaneReplayControls from '../containers/PlaneReplayControls';
 import MobileOverlay from './MobileOverlay';
 import KmlLoaderOverlay from './KmlLoaderOverlay';
 import { decodeConfig } from '../helpers';
@@ -66,7 +65,6 @@ export default class App extends Component {
             containerElement={<div style={{ height: '100%' }} />}
             mapElement={<div style={{ height: '100%' }} />}
           />
-          <PlaneReplayControls />
           {!staticMode && (
             <div className="buttons">
               {PLATFORM === 'electron' && (
