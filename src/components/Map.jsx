@@ -5,6 +5,7 @@ import { Map as LeafletMap, LayersControl, TileLayer, GeoJSON } from 'react-leaf
 import PropTypes from 'prop-types';
 
 import { POLYLINE_OPTIONS, BUILT_ICONS, PERIOD } from '../constants';
+import { getPlanesBounds, decodeConfig } from '../helpers';
 import Trace from './Trace';
 import RotatingMarker from './RotatingMarker';
 import GoogleMapLayer from './GoogleMapLayer';
@@ -19,14 +20,21 @@ const osmTiles = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 const otmTiles = 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png';
 const navLayerAttribution = '<a href="https://flightplandatabase.com" target="_blank">Flight Plan Database</a>';
 
+const { initialPositionIfMultiplePlanes = 'bounds' } = decodeConfig();
+
+
 class Map extends Component {
+  hasReceivedFirstPlane = false
+
+  map = null
+
   constructor() {
     super();
     this.state = {
-      currentPosition: [0, 0],
       zoom: 8,
     };
   }
+
 
   componentDidMount() {
     this.planeFetchInterval = setInterval(() => {
@@ -34,17 +42,12 @@ class Map extends Component {
     }, PERIOD);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (!nextProps.followedPlane) return;
-    const plane = nextProps.planes.find(aPlane => aPlane.ip === nextProps.followedPlane);
-    if (!plane) return;
-    this.setState({
-      currentPosition: plane.position,
-    });
-  }
-
   componentWillUnmount() {
     clearInterval(this.planeFetchInterval);
+  }
+
+  getMapCenter() {
+    return this.map && this.map.leafletElement.getCenter();
   }
 
   handleZoom = (e) => {
@@ -53,12 +56,40 @@ class Map extends Component {
     });
   }
 
+  handleDragstart = () => {
+    this.props.onPlaneLeave();
+  }
+
+  deducePositionalProps = () => {
+    if (this.props.followedPlane) {
+      const plane = this.props.planes.find(aPlane => aPlane.ip === this.props.followedPlane);
+      if (plane) {
+        return {
+          zoom: this.state.zoom,
+          center: plane.position,
+        };
+      }
+    }
+    if (!this.hasReceivedFirstPlane && this.props.planes.length) {
+      this.hasReceivedFirstPlane = true;
+      if (this.props.planes.length > 1 && initialPositionIfMultiplePlanes !== 'first') {
+        const bounds = getPlanesBounds(this.props.planes);
+        return { bounds };
+      }
+      return { zoom: this.state.zoom, center: this.props.planes[0].position };
+    }
+
+    return { zoom: this.state.zoom, center: this.getMapCenter() };
+  }
+
   render() {
+    const positionalProps = this.deducePositionalProps();
     return (
       <LeafletMap
-        center={this.state.currentPosition}
-        zoom={this.state.zoom}
-        onDragstart={this.props.onPlaneLeave}
+        ref={(ref) => { this.map = ref; }}
+        {...positionalProps}
+        onDragstart={this.handleDragstart}
+        onDragend={this.handleDragend}
         onZoomend={this.handleZoom}
       >
         <LayersControl position="bottomleft">

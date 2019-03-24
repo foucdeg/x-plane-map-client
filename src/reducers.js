@@ -10,7 +10,7 @@ const followedPlane = (state = null, action) => {
       if (Object.keys(action.planes).length === 1 && state === null) {
         return Object.keys(action.planes)[0];
       }
-      return state;
+      return state || false;
     default:
       return state;
   }

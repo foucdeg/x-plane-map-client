@@ -1,4 +1,6 @@
 /* globals document */
+import Leaflet from 'leaflet';
+
 const DEVIATION_THRESHOLD = 0.1; // square seconds
 const FEET_IN_A_METER = 3.28;
 const METERS_IN_A_LAT_DEGREE = 111319;
@@ -200,3 +202,25 @@ export function hashObject(object) {
   return hash;
 }
 /* eslint-enable no-bitwise */
+
+const minimumReducer = latOrLon => (accumulator, currentItem) => (
+  currentItem.position[latOrLon === 'lat' ? 0 : 1] < accumulator
+    ? currentItem.position[latOrLon === 'lat' ? 0 : 1]
+    : accumulator
+);
+
+const maximumReducer = latOrLon => (accumulator, currentItem) => (
+  currentItem.position[latOrLon === 'lat' ? 0 : 1] > accumulator
+    ? currentItem.position[latOrLon === 'lat' ? 0 : 1]
+    : accumulator
+);
+
+export function getPlanesBounds(planes) {
+  const maxLat = planes.reduce(maximumReducer('lat'), -90);
+  const minLat = planes.reduce(minimumReducer('lat'), 90);
+  const maxLng = planes.reduce(maximumReducer('lon'), -180);
+  const minLng = planes.reduce(minimumReducer('lon'), 180);
+  const southWest = new Leaflet.LatLng(minLat, minLng);
+  const northEast = new Leaflet.LatLng(maxLat, maxLng);
+  return new Leaflet.LatLngBounds(southWest, northEast);
+}
