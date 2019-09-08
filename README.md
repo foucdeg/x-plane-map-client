@@ -1,3 +1,11 @@
+# Repository archived
+
+This repository holds an obsolete version of [airspaces.app](https://airspaces.app).
+
+The repository for Airspaces is located at [foucdeg/airspaces](https://github.com/foucdeg/airspaces).
+
+For any questions, you are welcome to either post an issue on [foucdeg/airspaces](https://github.com/foucdeg/airspaces) or send me an email at foucauld.degeorges@gmail.com .
+
 # Airspaces client
 
 This is the frontend of [Airspaces](https://airspaces.app) - both its Electron and hosted version.
